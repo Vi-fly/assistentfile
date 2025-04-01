@@ -10,7 +10,6 @@ langchain-groq
 langchain-community
 SQLAlchemy
 tabulate
-bson
 pymango
 urllib.parse
-pymongo[srv]
+pymongo
