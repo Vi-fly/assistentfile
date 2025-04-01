@@ -4,6 +4,7 @@ python-dotenv
 pandas
 plotly
 jinja2
+openai
 langchain-core
 langchain-groq
 langchain-community
