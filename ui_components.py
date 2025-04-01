@@ -734,3 +734,34 @@ def discussions_page():
             st.rerun()
 
         st.markdown("---")
+        
+def attendance_page():
+    st.header("🚀 Performance Tracking Dashboard")
+    
+    # Add meta tag for redirection with delay
+    st.markdown("""
+    <meta http-equiv="refresh" content="0; url='https://docs.google.com/forms/d/e/1FAIpQLSc8kHkCHt-8Zxs3TJGknYFyfrW9B-zEd9yJTlTMLtATg8ZZhA/viewform?usp=dialog'">
+    """, unsafe_allow_html=True)
+    
+    # Show loading message
+    
+    # Fallback link
+    st.markdown("""
+    <div style="text-align: center; margin-top: 2rem;">
+        <h3>⏳ Redirecting to Attendance Form</h3>
+        <p>If you're not redirected automatically, click below:</p>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSc8kHkCHt-8Zxs3TJGknYFyfrW9B-zEd9yJTlTMLtATg8ZZhA/viewform?usp=dialog" target="_blank">
+            <button style="
+                background: #FF4B4B;
+                color: white;
+                padding: 1em 2em;
+                border: none;
+                border-radius: 10px;
+                font-size: 1.2rem;
+                cursor: pointer;
+                margin-top: 1rem;">
+                🔥 Open Attendance Form
+            </button>
+        </a>
+    </div>
+    """, unsafe_allow_html=True)
