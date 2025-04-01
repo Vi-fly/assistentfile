@@ -11,7 +11,6 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 from langchain_groq import ChatGroq
 llm = ChatGroq(api_key=GROQ_API_KEY, model_name="llama-3.3-70b-versatile")
-from bson.son import SON
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 import bson
