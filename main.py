@@ -7,7 +7,8 @@ from ui_components import (
     email_page,
     resource_bot_page,
     data_view_page,
-    discussions_page  # ✅ New import
+    discussions_page,
+    attendance_page 
 )
 
 # Initialize session state
@@ -24,7 +25,8 @@ page_options = [
     "📧 Send Email",
     "🤖 Resource Bot",
     "📊 View All Data",
-    "💬 Discussions"  # ✅ New Page
+    "💬 Discussions",
+    "📌 Attendance"# ✅ New Page
 ]
 
 # Page selection
@@ -48,8 +50,10 @@ elif page == "🤖 Resource Bot":
     resource_bot_page()
 elif page == "📊 View All Data":
     data_view_page()
-elif page == "💬 Discussions":  # ✅ New Routing
+elif page == "💬 Discussions": 
     discussions_page()
+elif page == "📌 Attendance": 
+    attendance_page()
 
 # Sidebar Examples Guide
 st.sidebar.markdown("### Examples Guide")
