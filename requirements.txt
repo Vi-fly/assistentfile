@@ -11,5 +11,3 @@ langchain-community
 SQLAlchemy
 tabulate
 pymango
-urllib.parse
-pymongo
