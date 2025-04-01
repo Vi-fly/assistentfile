@@ -10,5 +10,5 @@ langchain-groq
 langchain-community
 SQLAlchemy
 tabulate
-pymango
+pymongo>=4.0
 bson
