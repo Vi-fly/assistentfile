@@ -12,11 +12,15 @@ conn_pool = None
 
 def init_db_pool():
     global conn_pool
-    if hasattr(st, 'secrets'):
-        POSTGRES_URI = f"postgresql://{st.secrets['DB_USER']}:{st.secrets['DB_PASSWORD']}@{st.secrets['DB_HOST']}/{st.secrets['DB_NAME']}?sslmode=require"
-    else:
-        POSTGRES_URI = "postgresql://neondb_owner:npg_LgZ4en1QpsyD@ep-broad-bush-a5xjz0wm-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require"
-    
+
+    DB_USER = st.secrets.get("DB_USER", os.getenv("DB_USER", "neondb_owner"))
+    DB_PASSWORD = st.secrets.get("DB_PASSWORD", os.getenv("DB_PASSWORD", "npg_LgZ4en1QpsyD"))
+    DB_HOST = st.secrets.get("DB_HOST", os.getenv("DB_HOST", "ep-broad-bush-a5xjz0wm-pooler.us-east-2.aws.neon.tech"))
+    DB_NAME = st.secrets.get("DB_NAME", os.getenv("DB_NAME", "neondb"))
+    DB_PORT = st.secrets.get("DB_PORT", os.getenv("DB_PORT", "5432"))
+
+    POSTGRES_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
+
     conn_pool = psycopg2.pool.SimpleConnectionPool(1, 10, dsn=POSTGRES_URI)
 
 def get_db_connection():
