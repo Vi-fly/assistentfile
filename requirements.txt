@@ -11,4 +11,3 @@ langchain-community
 SQLAlchemy
 tabulate
 pymongo[srv] 
-bson
