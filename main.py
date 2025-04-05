@@ -11,14 +11,28 @@ from ui_components import (
     attendance_page 
 )
 
-# Custom CSS for sidebar
+# Set page config for dark theme
+st.set_page_config(
+    page_title="Task Manager Pro",
+    page_icon="✅",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Custom CSS for dark theme
 st.markdown("""
     <style>
+    /* Global Dark Theme */
+    .stApp {
+        background-color: #0E1117;
+        color: #FAFAFA;
+    }
+    
     /* Sidebar Styling */
     [data-testid="stSidebar"] {
-        background-color: #f8f9fa;
+        background-color: #1E1E1E;
         padding: 2rem 1rem;
-        border-right: 1px solid #e0e0e0;
+        border-right: 1px solid #333333;
     }
     
     [data-testid="stSidebar"] .sidebar-content {
@@ -30,7 +44,7 @@ st.markdown("""
         text-align: center;
         margin-bottom: 2rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid #333333;
     }
     
     .app-logo h2 {
@@ -41,7 +55,7 @@ st.markdown("""
     }
     
     .app-logo p {
-        color: #666;
+        color: #AAAAAA;
         font-size: 0.9rem;
         margin-bottom: 0;
     }
@@ -49,7 +63,7 @@ st.markdown("""
     /* Navigation Links */
     .stButton > button {
         background-color: transparent;
-        color: #2C3E50;
+        color: #CCCCCC;
         border: none;
         border-radius: 8px;
         padding: 0.75rem 1rem;
@@ -62,7 +76,7 @@ st.markdown("""
     }
     
     .stButton > button:hover {
-        background-color: rgba(74, 144, 226, 0.1);
+        background-color: rgba(74, 144, 226, 0.2);
         color: #4A90E2;
         transform: translateX(5px);
     }
@@ -74,11 +88,11 @@ st.markdown("""
     
     /* Examples Guide Styling */
     .examples-guide {
-        background-color: transparent;
+        background-color: #252525;
         border-radius: 10px;
         padding: 1.5rem;
         margin-top: 2rem;
-        border: 1px solid #e0e0e0;
+        border: 1px solid #333333;
     }
     
     .examples-guide h3 {
@@ -101,11 +115,11 @@ st.markdown("""
     .examples-guide .section-title {
         font-weight: 600;
         margin-bottom: 0.5rem;
-        color: #2C3E50;
+        color: #CCCCCC;
     }
     
     .examples-guide code {
-        background-color: rgba(240, 244, 248, 0.7);
+        background-color: #333333;
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
         font-size: 0.85em;
@@ -119,9 +133,9 @@ st.markdown("""
         text-align: center;
         margin-top: 2rem;
         padding-top: 1rem;
-        border-top: 1px solid #e0e0e0;
+        border-top: 1px solid #333333;
         font-size: 0.8rem;
-        color: #666;
+        color: #AAAAAA;
     }
     
     /* Active navigation item */
@@ -133,6 +147,99 @@ st.markdown("""
     .stButton > button[kind="primary"]:hover {
         background-color: #357ABD;
         color: white;
+    }
+    
+    /* Main content area */
+    .main .block-container {
+        background-color: #0E1117;
+        padding-top: 2rem;
+    }
+    
+    /* Headers */
+    h1, h2, h3, h4, h5, h6 {
+        color: #4A90E2;
+    }
+    
+    /* Text inputs */
+    .stTextInput > div > div > input {
+        background-color: #252525;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    
+    /* Text areas */
+    .stTextArea > div > div > textarea {
+        background-color: #252525;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    
+    /* Select boxes */
+    .stSelectbox > div > div > select {
+        background-color: #252525;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    
+    /* Date inputs */
+    .stDateInput > div > div > input {
+        background-color: #252525;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    
+    /* Time inputs */
+    .stTimeInput > div > div > input {
+        background-color: #252525;
+        color: #FAFAFA;
+        border: 1px solid #333333;
+    }
+    
+    /* Sliders */
+    .stSlider > div > div > div {
+        background-color: #252525;
+    }
+    
+    /* Tables */
+    .stDataFrame {
+        background-color: #252525;
+        border: 1px solid #333333;
+    }
+    
+    /* Cards */
+    .stCard {
+        background-color: #252525;
+        border: 1px solid #333333;
+    }
+    
+    /* Chat messages */
+    .stChatMessage {
+        background-color: #252525;
+        border: 1px solid #333333;
+    }
+    
+    /* Success messages */
+    .stSuccess {
+        background-color: #1E4620;
+        color: #A8E6A9;
+    }
+    
+    /* Error messages */
+    .stError {
+        background-color: #4A1E1E;
+        color: #E6A8A8;
+    }
+    
+    /* Info messages */
+    .stInfo {
+        background-color: #1E3A4A;
+        color: #A8D1E6;
+    }
+    
+    /* Warning messages */
+    .stWarning {
+        background-color: #4A3E1E;
+        color: #E6D1A8;
     }
     </style>
 """, unsafe_allow_html=True)
