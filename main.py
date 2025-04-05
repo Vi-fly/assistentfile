@@ -47,60 +47,38 @@ st.markdown("""
     }
     
     /* Navigation Links */
-    .nav-link {
-        display: flex;
-        align-items: center;
-        padding: 0.75rem 1rem;
+    .stButton > button {
+        background-color: transparent;
         color: #2C3E50;
-        text-decoration: none;
+        border: none;
         border-radius: 8px;
+        padding: 0.75rem 1rem;
         margin: 0.5rem 0;
         transition: all 0.3s ease;
-        background-color: white;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        text-align: left;
+        font-weight: 500;
+        width: 100%;
+        box-shadow: none;
     }
     
-    .nav-link:hover {
-        background-color: #F0F4F8;
+    .stButton > button:hover {
+        background-color: rgba(74, 144, 226, 0.1);
         color: #4A90E2;
         transform: translateX(5px);
     }
     
-    .nav-link.active {
-        background-color: #4A90E2;
-        color: white;
-        box-shadow: 0 4px 6px rgba(74, 144, 226, 0.2);
-    }
-    
-    .nav-link .icon {
-        font-size: 1.2rem;
-        margin-right: 10px;
-        width: 24px;
-        text-align: center;
-    }
-    
-    .nav-link .title {
-        font-weight: 600;
-        margin-bottom: 2px;
-    }
-    
-    .nav-link .description {
-        font-size: 0.75em;
-        color: #666;
-        opacity: 0.8;
-    }
-    
-    .nav-link.active .description {
-        color: rgba(255, 255, 255, 0.8);
+    .stButton > button:focus {
+        box-shadow: none;
+        border: none;
     }
     
     /* Examples Guide Styling */
     .examples-guide {
-        background-color: white;
+        background-color: transparent;
         border-radius: 10px;
         padding: 1.5rem;
         margin-top: 2rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border: 1px solid #e0e0e0;
     }
     
     .examples-guide h3 {
@@ -127,7 +105,7 @@ st.markdown("""
     }
     
     .examples-guide code {
-        background-color: #F0F4F8;
+        background-color: rgba(240, 244, 248, 0.7);
         padding: 0.2rem 0.4rem;
         border-radius: 4px;
         font-size: 0.85em;
@@ -144,6 +122,17 @@ st.markdown("""
         border-top: 1px solid #e0e0e0;
         font-size: 0.8rem;
         color: #666;
+    }
+    
+    /* Active navigation item */
+    .stButton > button[kind="primary"] {
+        background-color: #4A90E2;
+        color: white;
+    }
+    
+    .stButton > button[kind="primary"]:hover {
+        background-color: #357ABD;
+        color: white;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -213,10 +202,12 @@ page_options = [
 st.sidebar.markdown("### Navigation")
 for option in page_options:
     nav_item = f"{option['icon']} {option['title']}"
+    is_active = st.session_state.target_page == nav_item
     if st.sidebar.button(
         f"{option['icon']} {option['title']}",
         key=f"nav_{option['title'].lower().replace(' ', '_')}",
-        use_container_width=True
+        use_container_width=True,
+        type="primary" if is_active else "secondary"
     ):
         st.session_state.target_page = nav_item
         st.rerun()
