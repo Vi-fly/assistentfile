@@ -322,33 +322,33 @@ for option in page_options:
         st.rerun()
 
 # Examples Guide with enhanced styling
-st.sidebar.markdown("""
-    <div class='examples-guide'>
-        <h3>Quick Guide</h3>
+# st.sidebar.markdown("""
+#     <div class='examples-guide'>
+#         <h3>Quick Guide</h3>
         
-        <div class='section'>
-            <div class='section-title'>Add Data:</div>
-            <div class='code-block'>Add new contact: John, 5551234567, john@email.com, London</div>
-            <div class='code-block'>Create task: Project Setup, Initialize repo, 2024-12-31</div>
-        </div>
+#         <div class='section'>
+#             <div class='section-title'>Add Data:</div>
+#             <div class='code-block'>Add new contact: John, 5551234567, john@email.com, London</div>
+#             <div class='code-block'>Create task: Project Setup, Initialize repo, 2024-12-31</div>
+#         </div>
         
-        <div class='section'>
-            <div class='section-title'>View Data:</div>
-            <div class='code-block'>Show contacts from Delhi</div>
-            <div class='code-block'>List ongoing tasks for John</div>
-        </div>
+#         <div class='section'>
+#             <div class='section-title'>View Data:</div>
+#             <div class='code-block'>Show contacts from Delhi</div>
+#             <div class='code-block'>List ongoing tasks for John</div>
+#         </div>
         
-        <div class='section'>
-            <div class='section-title'>Update Data:</div>
-            <div class='code-block'>Change John's email to new@email.com</div>
-            <div class='code-block'>Mark task 5 as completed</div>
-        </div>
-    </div>
+#         <div class='section'>
+#             <div class='section-title'>Update Data:</div>
+#             <div class='code-block'>Change John's email to new@email.com</div>
+#             <div class='code-block'>Mark task 5 as completed</div>
+#         </div>
+#     </div>
     
-    <div class='sidebar-footer'>
-        © 2024 Task Manager Pro
-    </div>
-""", unsafe_allow_html=True)
+#     <div class='sidebar-footer'>
+#         © 2024 Task Manager Pro
+#     </div>
+# """, unsafe_allow_html=True)
 
 # Page routing
 page = st.session_state.target_page
