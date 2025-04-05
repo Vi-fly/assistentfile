@@ -118,14 +118,16 @@ st.markdown("""
         color: #CCCCCC;
     }
     
-    .examples-guide code {
+    .examples-guide .code-block {
         background-color: #333333;
-        padding: 0.2rem 0.4rem;
+        padding: 0.5rem 0.75rem;
         border-radius: 4px;
         font-size: 0.85em;
         color: #4A90E2;
         display: block;
         margin: 0.3rem 0;
+        font-family: 'Courier New', monospace;
+        border-left: 3px solid #4A90E2;
     }
     
     /* Footer */
@@ -326,20 +328,20 @@ st.sidebar.markdown("""
         
         <div class='section'>
             <div class='section-title'>Add Data:</div>
-            <code>Add new contact: John, 5551234567, john@email.com, London</code>
-            <code>Create task: Project Setup, Initialize repo, 2024-12-31</code>
+            <div class='code-block'>Add new contact: John, 5551234567, john@email.com, London</div>
+            <div class='code-block'>Create task: Project Setup, Initialize repo, 2024-12-31</div>
         </div>
         
         <div class='section'>
             <div class='section-title'>View Data:</div>
-            <code>Show contacts from Delhi</code>
-            <code>List ongoing tasks for John</code>
+            <div class='code-block'>Show contacts from Delhi</div>
+            <div class='code-block'>List ongoing tasks for John</div>
         </div>
         
         <div class='section'>
             <div class='section-title'>Update Data:</div>
-            <code>Change John's email to new@email.com</code>
-            <code>Mark task 5 as completed</code>
+            <div class='code-block'>Change John's email to new@email.com</div>
+            <div class='code-block'>Mark task 5 as completed</div>
         </div>
     </div>
     
