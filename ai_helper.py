@@ -8,8 +8,6 @@ import streamlit as st
 
 load_dotenv()
 
-# Add this after load_dotenv() to debug:
-print("GROQ_API_KEY:", os.getenv("GROQ_API_KEY"))
 
 # Initialize ChatGroq
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
