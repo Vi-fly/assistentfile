@@ -1,0 +1,13 @@
+streamlit
+psycopg2-binary
+python-dotenv
+pandas
+plotly
+jinja2
+openai
+langchain-core
+langchain-groq
+langchain-community
+SQLAlchemy
+tabulate
+pymongo[srv] 
