@@ -89,20 +89,29 @@ def home_page():
             sql_query = generate_sql_query(prompt, action_type)
             
             if sql_query:
-                # Execute query
-                columns, result = execute_query(sql_query)
+                try:
+                    # Execute query
+                    columns, result = execute_query(sql_query)
 
-                # Format response
-                if action_type == "view" and columns:
-                    df = pd.DataFrame(result, columns=columns)
-                    response = f"🔍 Found {len(result)} results:\n\n{df.to_markdown(index=False)}"
-                elif action_type in ["add", "update"]:
-                    response = f"✅ Successfully {'added' if action_type == 'add' else 'updated'} {result} record(s)"
-                else:
-                    response = "❌ No results found or invalid query"
+                    # Format response
+                    if action_type == "view" and columns and result is not None:
+                        df = pd.DataFrame(result, columns=columns)
+                        response = f"🔍 Found {len(result)} results:\n\n{df.to_markdown(index=False)}"
+                    elif action_type in ["add", "update"] and result is not None:
+                        response = f"✅ Successfully {'added' if action_type == 'add' else 'updated'} {result} record(s)"
+                    else:
+                        response = "❌ No results found or invalid query"
 
-                # Add assistant response
-                st.session_state.messages.append({"role": "assistant", "content": response})
+                    # Add assistant response
+                    st.session_state.messages.append({"role": "assistant", "content": response})
+                    st.rerun()
+                except Exception as e:
+                    error_response = f"❌ Error executing query: {str(e)}"
+                    st.session_state.messages.append({"role": "assistant", "content": error_response})
+                    st.rerun()
+            else:
+                error_response = "❌ Could not generate a valid SQL query for your request."
+                st.session_state.messages.append({"role": "assistant", "content": error_response})
                 st.rerun()
 
 def contacts_page():
@@ -479,7 +488,7 @@ def resource_bot_page():
     
     with tab1:
         # Chatbot Section
-        with st.container(border=True):
+        with st.container():
             st.subheader("Task Assistant", divider="rainbow")
             user_input = st.text_input("Enter a task (e.g., website development, marketing campaign):")
             
@@ -520,7 +529,7 @@ def resource_bot_page():
     
     with tab2:
         # Chat History Section
-        with st.container(border=True):
+        with st.container():
             st.subheader("Saved Suggestions", divider="rainbow")
             chat_files = list_saved_chats()
             
@@ -635,25 +644,45 @@ def list_saved_chats():
 
 def query_groq(prompt):
     """Send a query to the Groq API and get the response."""
-    client = openai.Client(
-        api_key=GROQ_API_KEY,
-        base_url="https://api.groq.com/openai/v1"
-    )
-    response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.choices[0].message.content
+    try:
+        client = openai.Client(
+            api_key=GROQ_API_KEY,
+            base_url="https://api.groq.com/openai/v1"
+        )
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        st.error(f"Error calling Groq API: {str(e)}")
+        return f"I apologize, but I encountered an error while processing your request. Please try again later. Error: {str(e)}"
 
 def generate_prompt(task):
     """Generate a prompt to ask Groq for resource suggestions."""
-    contacts = get_contacts()
-    skills_dict = {name: skills for name, skills in contacts}
-    prompt = f"For the task '{task}', suggest required resources like budget, tools, and storage. "
-    prompt += "Also, suggest suitable employees based on these available skills: "
-    prompt += ", ".join([f"{name} ({skills})" for name, skills in skills_dict.items()])
-    prompt += " If employees with necessary skills are not available, ask to hire employees with necessary skills."
-    return prompt
+    try:
+        contacts = get_contacts()
+        if contacts:
+            skills_dict = {name: skills for name, skills in contacts if name and skills}
+            if skills_dict:
+                prompt = f"For the task '{task}', suggest required resources like budget, tools, and storage. "
+                prompt += "Also, suggest suitable employees based on these available skills: "
+                prompt += ", ".join([f"{name} ({skills})" for name, skills in skills_dict.items()])
+                prompt += " If employees with necessary skills are not available, ask to hire employees with necessary skills."
+            else:
+                prompt = f"For the task '{task}', suggest required resources like budget, tools, and storage. "
+                prompt += "No employees with specific skills are currently available in the database. "
+                prompt += "Please suggest hiring employees with necessary skills for this task."
+        else:
+            prompt = f"For the task '{task}', suggest required resources like budget, tools, and storage. "
+            prompt += "No employees are currently available in the database. "
+            prompt += "Please suggest hiring employees with necessary skills for this task."
+        return prompt
+    except Exception as e:
+        # Fallback prompt if database query fails
+        prompt = f"For the task '{task}', suggest required resources like budget, tools, and storage. "
+        prompt += "Please suggest hiring employees with necessary skills for this task."
+        return prompt
 
 from discussions import get_all_posts, add_post, add_like, add_comment, delete_post
 import streamlit as st

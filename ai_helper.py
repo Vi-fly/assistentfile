@@ -10,31 +10,11 @@ load_dotenv()
 
 
 # Initialize ChatGroq
-llm = None
-
-def get_llm():
-    """Get or initialize the LLM instance"""
-    global llm
-    if llm is None:
-        GROQ_API_KEY = st.secrets.get("GROQ_API_KEY", os.getenv("GROQ_API_KEY"))
-        if not GROQ_API_KEY:
-            st.error("GROQ_API_KEY not found. Please set it in your Streamlit secrets or environment variables.")
-            return None
-        else:
-            try:
-                llm = ChatGroq(api_key=GROQ_API_KEY, model_name="llama-3.3-70b-versatile")
-            except Exception as e:
-                st.error(f"Failed to initialize ChatGroq: {e}")
-                return None
-    return llm
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+llm = ChatGroq(api_key=GROQ_API_KEY, model_name="llama-3.3-70b-versatile")
 
 def generate_task_details(description: str) -> dict:
     """Generate detailed task parameters from description"""
-    llm_instance = get_llm()
-    if llm_instance is None:
-        st.error("LLM not initialized. Cannot generate task details.")
-        return {}
-        
     system_prompt = """Analyze the task description and generate detailed task parameters. Return STRICTLY ONLY VALID JSON with:
     {
         "title": "string",
@@ -78,7 +58,7 @@ def generate_task_details(description: str) -> dict:
     ]
     
     try:
-        response = llm_instance.invoke(messages)
+        response = llm.invoke(messages)
         raw_response = response.content.strip()
         
         # Enhanced cleaning process
@@ -126,11 +106,6 @@ def generate_task_details(description: str) -> dict:
 
 def generate_sql_query(prompt: str, action: str) -> str:
     """Generate SQL query based on selected action and user input"""
-    llm_instance = get_llm()
-    if llm_instance is None:
-        st.error("LLM not initialized. Cannot generate SQL query.")
-        return ""
-        
     system_prompts = {
         "add": (
     "You are an expert in generating SQL INSERT statements for a contacts database in PostgreSQL (Neon Database). "
@@ -140,18 +115,16 @@ def generate_sql_query(prompt: str, action: str) -> str:
     "- NAME (VARCHAR NOT NULL)\n"
     "- PHONE (BIGINT UNIQUE NOT NULL CHECK (LENGTH(PHONE::TEXT) = 10))\n"
     "- EMAIL (VARCHAR UNIQUE NOT NULL)\n"
-    "- ADDRESS (TEXT)\n"
-    "- SKILLS (TEXT NOT NULL)\n\n"
+    "- ADDRESS (TEXT)\n\n"
     "Rules for INSERT Statements:\n"
-    "1. For CONTACTS: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS, SKILLS) VALUES (...);\n"
+    "1. For CONTACTS: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS) VALUES (...);\n"
     "2. Phone numbers must be 10-digit integers.\n"
     "3. Use single quotes for string values.\n"
     "4. Ensure queries are compatible with PostgreSQL.\n"
-    "5. Return only the SQL query, no explanations.\n"
-    "6. SKILLS column is REQUIRED and cannot be NULL.\n\n"
+    "5. Return only the SQL query, no explanations.\n\n"
     "Examples:\n"
-    "1. Add new contact: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS, SKILLS) VALUES ('John Doe', 5551234567, 'john@email.com', '123 Main St', 'Software Development');\n"
-    "2. Add another contact: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS, SKILLS) VALUES ('Jane Smith', 9876543210, 'jane@email.com', '456 Oak Ave', 'Project Management');"
+    "1. Add new contact: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS) VALUES ('John Doe', 5551234567, 'john@email.com', '123 Main St');\n"
+    "2. Add another contact: INSERT INTO CONTACTS (NAME, PHONE, EMAIL, ADDRESS) VALUES ('Jane Smith', 9876543210, 'jane@email.com', '456 Oak Ave');"
     ),
     "view": (
     "You are an expert in generating SQL SELECT queries with JOINs for a contacts and tasks database in PostgreSQL (Neon Database).\n\n"
@@ -192,7 +165,7 @@ def generate_sql_query(prompt: str, action: str) -> str:
     ]
     
     try:
-        response = llm_instance.invoke(messages)
+        response = llm.invoke(messages)
         sql_query = response.content.strip()
         
         if sql_query.startswith("```sql"):
@@ -207,11 +180,6 @@ def generate_sql_query(prompt: str, action: str) -> str:
 
 def classify_action(prompt: str) -> str:
     """Classify user intent into add/view/update actions using LLM"""
-    llm_instance = get_llm()
-    if llm_instance is None:
-        st.error("LLM not initialized. Defaulting to 'view' action.")
-        return 'view'
-        
     system_prompt = "Classify the user's database request into one of: add, view, or update..."
     
     messages = [
@@ -220,7 +188,7 @@ def classify_action(prompt: str) -> str:
     ]
     
     try:
-        response = llm_instance.invoke(messages)
+        response = llm.invoke(messages)
         action = response.content.strip().lower()
         return action if action in ['add', 'view', 'update'] else 'view'
     except Exception as e:

@@ -22,9 +22,8 @@ def init_db_pool():
         POSTGRES_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}?sslmode=require"
 
         conn_pool = psycopg2.pool.SimpleConnectionPool(1, 10, dsn=POSTGRES_URI)
-        print("Database connection pool initialized successfully")
     except Exception as e:
-        print(f"Failed to initialize database connection pool: {e}")
+        st.error(f"Error initializing database pool: {e}")
         conn_pool = None
 
 def get_db_connection():
@@ -53,45 +52,35 @@ def execute_query(sql_query: str, params=None):
     conn = None
     cur = None
     try:
-        # Check if connection pool is initialized
         if conn_pool is None:
-            print("Database connection pool not initialized. Please check your database configuration.")
+            st.error("Database connection pool not initialized")
             return None, None
             
         conn = conn_pool.getconn()
         cur = conn.cursor()
 
         if sql_query.strip().upper().startswith("SELECT"):
-            cur.execute(sql_query, params or ())
+            if params:
+                cur.execute(sql_query, params)
+            else:
+                cur.execute(sql_query)
             rows = cur.fetchall()
-            # Fix: Add more robust error handling for cursor description
-            columns = []
-            try:
-                if cur.description:
-                    columns = [desc[0] for desc in cur.description if desc and len(desc) > 0]
-                else:
-                    # If no description, create generic column names
-                    columns = [f"column_{i}" for i in range(len(rows[0]) if rows else 0)]
-            except (IndexError, TypeError, AttributeError) as e:
-                print(f"Error accessing cursor description: {e}")
-                print(f"Query: {sql_query}")
-                # Create generic column names based on row data
-                if rows and len(rows) > 0:
-                    columns = [f"column_{i}" for i in range(len(rows[0]))]
+            columns = [desc[0] for desc in cur.description] if cur.description else []
             return columns, rows
         else:
-            cur.execute(sql_query, params or ())
+            if params:
+                cur.execute(sql_query, params)
+            else:
+                cur.execute(sql_query)
             affected_rows = cur.rowcount
             conn.commit()
             return None, affected_rows
             
     except psycopg2.Error as e:
-        print(f"SQL error: {e}")
-        print(f"Query: {sql_query}")
+        st.error(f"SQL error: {e}")
         return None, None
     except Exception as e:
-        print(f"Unexpected error in execute_query: {e}")
-        print(f"Query: {sql_query}")
+        st.error(f"Database error: {e}")
         return None, None
     finally:
         if cur:
@@ -101,17 +90,25 @@ def execute_query(sql_query: str, params=None):
 
 def get_contacts():
     """Fetch name and skills from Contacts table"""
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT NAME, SKILLS FROM CONTACTS;")
-    contacts = cursor.fetchall()
-    conn.close()
-    return contacts
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT NAME, SKILLS FROM CONTACTS;")
+        contacts = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return contacts
+    except Exception as e:
+        st.error(f"Error fetching contacts: {str(e)}")
+        return []
 
 def get_total_tasks():
     try:
         columns, data = execute_query("SELECT COUNT(*) FROM TASKS")
-        return data[0][0] if data else 0
+        if data and len(data) > 0 and len(data[0]) > 0:
+            return data[0][0]
+        else:
+            return 0
     except Exception as e:
         st.error(f"Error getting task count: {str(e)}")
         return 0
